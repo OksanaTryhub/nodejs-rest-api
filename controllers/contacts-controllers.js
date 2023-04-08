@@ -11,6 +11,7 @@ const getAllContacts = async (req, res) => {
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
   const result = await Contact.findById(contactId);
+
   console.log(result);
   if (!result) {
     throw HttpError(404);
@@ -20,12 +21,14 @@ const getContactById = async (req, res) => {
 
 const addContact = async (req, res) => {
   const result = await Contact.create(req.body);
+
   res.status(201).json(result);
 };
 
 const deleteContactById = async (req, res, next) => {
   const { contactId } = req.params;
   const result = await Contact.findByIdAndDelete(contactId);
+
   if (!result) {
     throw HttpError(404);
   }
@@ -37,6 +40,7 @@ const deleteContactById = async (req, res, next) => {
 const updateContactById = async (req, res) => {
   const { contactId } = req.params;
   const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true });
+
   if (!result) {
     throw HttpError(404);
   } else if (Object.keys(req.body).length === 0) {
@@ -61,4 +65,5 @@ module.exports = {
   deleteContactById: ctrlWrapper(deleteContactById),
   updateContactById: ctrlWrapper(updateContactById),
   updateStatusContact: ctrlWrapper(updateStatusContact),
+
 };
