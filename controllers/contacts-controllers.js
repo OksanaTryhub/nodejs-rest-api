@@ -1,3 +1,5 @@
+const { isValidObjectId } = require("mongoose");
+
 const { Contact } = require("../models/contact");
 
 const { HttpError } = require("../helpers");
@@ -10,6 +12,10 @@ const getAllContacts = async (req, res) => {
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
+
+  if (!isValidObjectId(contactId)) {
+    throw HttpError(404);
+  }
   const result = await Contact.findById(contactId);
 
   console.log(result);
@@ -27,6 +33,10 @@ const addContact = async (req, res) => {
 
 const deleteContactById = async (req, res, next) => {
   const { contactId } = req.params;
+
+  if (!isValidObjectId(contactId)) {
+    throw HttpError(404);
+  }
   const result = await Contact.findByIdAndDelete(contactId);
 
   if (!result) {
@@ -39,6 +49,10 @@ const deleteContactById = async (req, res, next) => {
 
 const updateContactById = async (req, res) => {
   const { contactId } = req.params;
+
+  if (!isValidObjectId(contactId)) {
+    throw HttpError(404);
+  }
   const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true });
 
   if (!result) {
@@ -51,7 +65,12 @@ const updateContactById = async (req, res) => {
 
 const updateStatusContact = async (req, res) => {
   const { contactId } = req.params;
+
+  if (!isValidObjectId(contactId)) {
+    throw HttpError(404);
+  }
   const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true });
+
   if (!result) {
     throw HttpError(404);
   }
@@ -65,5 +84,4 @@ module.exports = {
   deleteContactById: ctrlWrapper(deleteContactById),
   updateContactById: ctrlWrapper(updateContactById),
   updateStatusContact: ctrlWrapper(updateStatusContact),
-
 };
