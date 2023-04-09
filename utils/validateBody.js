@@ -11,6 +11,17 @@ const validateUpdateContactBody = (schema) => {
   return func;
 };
 
+const validateUpdateContactStatus = (schema) => {
+  const func = async (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next(HttpError(400, "missing field favorite"));
+    }
+    next();
+  };
+  return func;
+};
+
 const validateAddContactBody = (schema) => {
   const func = async (req, res, next) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
@@ -28,4 +39,5 @@ const validateAddContactBody = (schema) => {
 module.exports = {
   validateUpdateContactBody,
   validateAddContactBody,
+  validateUpdateContactStatus,
 };
