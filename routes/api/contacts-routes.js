@@ -9,15 +9,30 @@ const {
 } = require("../../utils/validateBody");
 const { schemas } = require("../../models/contact");
 
-router.get("/", ctrl.getAllContacts);
+const { isValidId, authenticate } = require("../../middlewares");
 
-router.get("/:contactId", ctrl.getContactById);
+router.get("/", authenticate, ctrl.getAllContacts);
 
-router.post("/", validateAddContactBody(schemas.addSchema), ctrl.addContact);
+router.get("/:contactId", authenticate, isValidId, ctrl.getContactById);
 
-router.delete("/:contactId", ctrl.deleteContactById);
+router.post("/", authenticate, validateAddContactBody(schemas.addSchema), ctrl.addContact);
 
-router.put("/:contactId", validateUpdateContactBody(schemas.updateSchema), ctrl.updateContactById);
-router.patch("/:contactId/favorite", validateUpdateContactStatus(schemas.updateStatusSchema), ctrl.updateStatusContact);
+router.delete("/:contactId", authenticate, isValidId, ctrl.deleteContactById);
+
+router.put(
+  "/:contactId",
+  authenticate,
+  isValidId,
+  validateUpdateContactBody(schemas.updateSchema),
+  ctrl.updateContactById
+);
+
+router.patch(
+  "/:contactId/favorite",
+  authenticate,
+  isValidId,
+  validateUpdateContactStatus(schemas.updateStatusSchema),
+  ctrl.updateStatusContact
+);
 
 module.exports = router;
